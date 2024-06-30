@@ -1,25 +1,39 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState, useEffect, useRef } from "react"
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const App = () => {
+  const [messages, setMessages] = useState([])
+  const [newMessage, setNewMessage] = useState("")
+  const messagesEndRef = useRef(null)
+
+  const handleSubmit = (event) => {
+    event.preventDefault()
+    if (newMessage.trim() !== "") {
+      setMessages([...messages, newMessage])
+      setNewMessage("")
+    }
+  }
+
+  useEffect(() => {
+  messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+}, [messages]);
+
+  return <section className="chat">
+  <div className="chat-box">
+    {messages.map((oneMessage, index) => (
+      <p key={index}>{oneMessage}</p>
+    ))}
+    <div ref={messagesEndRef}></div>
+    <form onSubmit={handleSubmit}>
+      <input  type="text"
+                value={newMessage}
+                placeholder="Zadejte zprávu"
+                onChange={ (e) => setNewMessage(e.target.value) }
+        />
+        <button>Odeslat</button>
+    </form>
+  </div>
+</section>
+  
 }
 
-export default App;
+export default App
